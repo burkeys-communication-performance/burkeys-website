@@ -7,17 +7,22 @@
 <section class="diagnostic-request" aria-labelledby="request-title">
 <div class="container request-grid">
 <div class="request-intro"><p class="eyebrow">DIAGNOSTIC OFFERT</p><h1 id="request-title">Parlons de votre situation.</h1><p>Un premier échange, sans engagement, pour comprendre votre besoin et voir comment BurKEYS peut vous aider.</p></div>
-<form class="request-form" id="diagnostic-request-form" aria-labelledby="request-title" aria-describedby="request-availability">
-<p class="request-availability" id="request-availability" role="status">Ce formulaire n’est pas encore connecté. Aucune demande ne peut être envoyée pour le moment.</p>
-<div class="request-field"><label for="request-name">Prénom</label><input id="request-name" name="prenom" autocomplete="given-name" required aria-describedby="request-name-error"><p class="field-error" id="request-name-error" aria-live="polite" hidden></p></div>
+<form class="request-form" id="diagnostic-request-form" action="https://formspree.io/f/xppwpjok" method="POST" aria-labelledby="request-title">
+<div class="request-field"><label for="request-name">Prénom</label><input id="request-name" name="name" autocomplete="given-name" required aria-describedby="request-name-error"><p class="field-error" id="request-name-error" aria-live="polite" hidden></p></div>
 <div class="request-field"><label for="request-email">Email</label><input id="request-email" name="email" type="email" autocomplete="email" required aria-describedby="request-email-error"><p class="field-error" id="request-email-error" aria-live="polite" hidden></p></div>
-<div class="request-field"><label for="request-situation">Dans quelle situation avez-vous besoin de mieux communiquer en anglais ?</label><textarea id="request-situation" name="situation" rows="5" placeholder="Une réunion, un entretien, une présentation…" required aria-describedby="request-situation-error"></textarea><p class="field-error" id="request-situation-error" aria-live="polite" hidden></p></div>
-<button class="button" type="submit" disabled>Demander mon diagnostic</button>
+<div class="request-field"><label for="request-situation">En quelques mots, dans quelle situation souhaitez-vous être plus à l’aise en anglais ?</label><textarea id="request-situation" name="message" rows="5" placeholder="Une réunion, un entretien, une présentation…" required aria-describedby="request-situation-error"></textarea><p class="field-error" id="request-situation-error" aria-live="polite" hidden></p></div>
+<button class="button" type="submit">Demander mon diagnostic</button>
 <p class="request-reassurance">Je vous répondrai personnellement sous 48 heures.</p>
 <p class="request-privacy">Vos informations seront uniquement utilisées pour répondre à votre demande.</p>
 <p class="request-status" role="alert" tabindex="-1" hidden></p>
 </form>
-<template id="diagnostic-success-message"><p>Merci pour votre demande.<br>Je vous contacterai personnellement sous 48 heures.</p></template>
+<template id="diagnostic-success-message">
+<div class="request-confirmation" tabindex="-1" role="status" style="padding: 32px 0; text-align: center;">
+<h2 class="eyebrow" style="color: var(--terracotta);">DEMANDE ENVOYÉE</h2>
+<p>Merci, votre demande a bien été envoyée.</p>
+<p class="request-reassurance">Je vous répondrai personnellement sous 48 heures.</p>
+</div>
+</template>
 </div>
 </section>
 </main>

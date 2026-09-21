@@ -13,10 +13,9 @@ if (btn && nav) {
 
 const requestForm = document.querySelector('#diagnostic-request-form');
 if (requestForm) {
-  // No endpoint is configured. Never transmit data or display a success state.
-  // diagnostic-success-message is an inert template for a future confirmed response.
   requestForm.noValidate = true;
-  requestForm.querySelector('[type="submit"]').disabled = false;
+  const submitButton = requestForm.querySelector('[type="submit"]');
+  let submitting = false;
   const fields = [...requestForm.querySelectorAll('input, textarea')];
   const status = requestForm.querySelector('.request-status');
   function validateField(field) {
@@ -33,16 +32,43 @@ if (requestForm) {
     if (field.hasAttribute('aria-invalid')) validateField(field);
     status.hidden = true;
   }));
-  requestForm.addEventListener('submit', event => {
+  requestForm.addEventListener('submit', async event => {
     event.preventDefault();
+    if (submitting) return;
     const invalidFields = fields.filter(field => !validateField(field));
     if (invalidFields.length) {
       status.hidden = true;
       invalidFields[0].focus();
       return;
     }
-    status.textContent = 'Votre demande n’a pas été envoyée : le formulaire doit encore être connecté.';
-    status.hidden = false;
-    status.focus();
+    submitting = true;
+    submitButton.disabled = true;
+    status.hidden = true;
+    try {
+      // Prepare the existing template before sending, while errors can still
+      // be displayed in the intact form. Keep its card styling unchanged.
+      const template = document.getElementById('diagnostic-success-message');
+      const confirmationCard = document.createElement('div');
+      confirmationCard.className = requestForm.className;
+      confirmationCard.appendChild(template.content.cloneNode(true));
+      const confirmation = confirmationCard.querySelector('.request-confirmation');
+      if (!confirmation) throw new Error('Missing confirmation message');
+
+      const response = await fetch(requestForm.action, {
+        method: 'POST',
+        body: new FormData(requestForm),
+        headers: { Accept: 'application/json' }
+      });
+      if (!response.ok) throw new Error('Submission failed');
+      requestForm.replaceWith(confirmationCard);
+      confirmation.focus();
+    } catch (error) {
+      status.textContent = 'Votre demande n’a pas pu être envoyée. Veuillez réessayer dans quelques instants.';
+      status.hidden = false;
+      status.focus();
+    } finally {
+      submitting = false;
+      submitButton.disabled = false;
+    }
   });
 }
